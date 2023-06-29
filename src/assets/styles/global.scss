@@ -6,12 +6,17 @@
 $fontSize: 37.5;    //默认为37.5
 
 @function px2rem($px){
-    @return ($px/$fontSize) + rem;
+    @return calc($px/$fontSize) + rem;
 }   // 将px转换成rem
 
 @mixin center(){
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.icon{
+    color: #333;
+    font-size: px2rem(20);
 }
 
