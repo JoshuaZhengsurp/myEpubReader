@@ -1,12 +1,12 @@
 <template>
-    <HelloWorld></HelloWorld>
-    <span class="icon-back"></span>
+    <!-- <HelloWorld></HelloWorld> -->
+    <router-view></router-view>
 </template>
 
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue';
+// import HelloWorld from './components/HelloWorld.vue';
 document.addEventListener('DOMContentLoaded',()=>{
-    const html:HTMLElement = document.querySelector('html');
+    const html:HTMLElement = document.querySelector('html') as HTMLElement;
     let fontSize = window.innerWidth/10;
     fontSize = fontSize > 40?40:fontSize;
     console.log(fontSize)
