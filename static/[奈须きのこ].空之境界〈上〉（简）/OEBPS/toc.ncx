@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd"><ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+<head>
+   <meta content="urn:uuid:5208e6bb-5d25-45b0-a7fd-b97d79a85fd4" name="dtb:uid"/>
+   <meta content="0" name="dtb:depth"/>
+   <meta content="0" name="dtb:totalPageCount"/>
+   <meta content="0" name="dtb:maxPageNumber"/>
+</head>
+<docTitle>
+   <text>空之境界〈上〉</text><!--填写书名-->
+</docTitle>
+<docAuthor>
+   <text>奈须きのこ</text><!--填写书籍作者-->
+</docAuthor>
+<navMap>
+
+<!--一对navPoint标签代表一个章节，按需要设定（字母区分大小写）-->
+
+<navPoint id="cover" playOrder="0"><!--模板中设置好的前三章请不要改动-->
+  <navLabel>
+    <text>封面</text>
+  </navLabel>
+  <content src="Text/cover.xhtml"/>
+</navPoint>
+
+<navPoint id="message" playOrder="1">
+  <navLabel>
+    <text>制作信息</text>
+  </navLabel>
+  <content src="Text/message.xhtml"/>
+</navPoint>
+
+<navPoint id="contents" playOrder="2"><!--章节的ID、播放顺序-->
+  <navLabel>
+    <text>目录</text>
+  </navLabel>
+  <content src="Text/contents.xhtml"/>
+</navPoint>
+
+<navPoint id="section001" playOrder="3"><!--ID是该章节的文件名，播放顺序按照章节顺序修改-->
+  <navLabel>
+    <text>简介</text><!--填写章节的名称-->
+  </navLabel>
+  <content src="Text/Section001.xhtml"/><!--修改为需要链接到的章节文件名-->
+</navPoint>
+
+<navPoint id="annals" playOrder="4">
+  <navLabel>
+    <text>年表</text>
+  </navLabel>
+  <content src="Text/annals.xhtml"/>
+</navPoint>
+
+<navPoint id="section002" playOrder="4">
+  <navLabel>
+    <text>彩页</text>
+  </navLabel>
+  <content src="Text/Section002.xhtml"/>
+</navPoint>
+
+<navPoint id="section005" playOrder="5">
+  <navLabel>
+    <text>1／俯瞰风景 thanatos.</text>
+  </navLabel>
+  <content src="Text/Section005.xhtml"/>
+</navPoint>
+
+<navPoint id="section014" playOrder="6">
+  <navLabel>
+    <text>2／杀人考察（前） ..and nothing heart.</text>
+  </navLabel>
+  <content src="Text/Section014.xhtml"/>
+</navPoint>
+
+<navPoint id="section024" playOrder="7">
+  <navLabel>
+    <text>3／痛觉残留 ever cry. never life.</text>
+  </navLabel>
+  <content src="Text/Section024.xhtml"/>
+</navPoint>
+
+<navPoint id="section036" playOrder="8">
+  <navLabel>
+    <text>解说 绫迂行人</text>
+  </navLabel>
+  <content src="Text/Section036.xhtml"/>
+</navPoint>
+
+</navMap>
+</ncx>

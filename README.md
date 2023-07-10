@@ -18,3 +18,7 @@ epub -(epubjs)-> Book(object):
 1. Rendition (Theme,包括排版，样式)
 2. Location （电子书定位）
 3. Navigation（电子书目录）
+
+
+### 问题
+对于《春物.epub》轻小说，由于images未在.opf文件声明，图片未提前预加载，从而发送的请求是基于本地路径的，导致资源找不到（... ）

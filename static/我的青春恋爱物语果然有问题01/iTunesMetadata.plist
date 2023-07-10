@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>artistName</key>
+	<string>渡航</string>
+	<key>book-info</key>
+	<dict>
+		<key>cover-image-hash</key>
+		<string>D593A98E4FB5F1F0063911C3392E7812</string>
+		<key>cover-image-path</key>
+		<string>OPS/images/cover.jpg</string>
+		<key>mime-type</key>
+		<string>application/epub+zip
+</string>
+		<key>package-file-hash</key>
+		<string>BD45ED1FCBD4E3C18FBA12009F76B49C</string>
+		<key>unique-id</key>
+		<integer>-4808176306328640575</integer>
+		<key>update-level</key>
+		<integer>2</integer>
+	</dict>
+	<key>itemName</key>
+	<string>果然我的青春恋爱喜剧搞错了 01</string>
+	<key>playlistName</key>
+	<string>果然我的青春恋爱喜剧搞错了 01</string>
+	<key>releaseDate</key>
+	<string>2012-11-23</string>
+</dict>
+</plist>

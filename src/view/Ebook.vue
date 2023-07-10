@@ -1,6 +1,6 @@
 <template>
   <!-- <div>1111</div> -->
-  <div class="ebook">
+  <div class="ebook" tabindex="0" v-on:keydown="handleKeyDown" >
     <transition name="slide-down">
       <!-- 标题栏 -->
       <div class="title-wrapper" v-show="titleAndMenuShow">
@@ -27,6 +27,10 @@
           <div class="left" @click="prevPage"></div>
           <div class="center" @click="toggleTitleAndMenu"></div>
           <div class="right" @click="nextPage"></div>
+          <!-- <div v-focus>
+            <div @keydown.left="prevPage"></div>
+            <div @keydown.enter="nextPage"></div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -54,8 +58,12 @@
 <script setup lang="ts">
 import Epub from 'epubjs';
 // const DOWNLOAD_URL = '../../static/倦怠社会_韩炳哲.epub'
-const DOWNLOAD_URL = '我的青春恋爱物语果然有问题01.epub';
+// const epubName = "[奈须きのこ].空之境界〈上〉（简）";
+const epubName = "我的青春恋爱物语果然有问题01";
+const DOWNLOAD_URL = `http://localhost:5173/${epubName}.epub`;
 import { onMounted, ref } from 'vue';
+
+// document.addEventListener('keydown', )
 
 let titleAndMenuShow = ref<boolean>(false);
 let book: any = new (Epub as any)(DOWNLOAD_URL);
@@ -70,14 +78,37 @@ onMounted(() => {
   // Redition
   // display 直接操作dom的形式挂上电子书
   rendition.display();
+  console.log(book);
+  console.log(rendition);
 })
 
+function handleKeyDown(event:KeyboardEvent)
+{
+  // console.log(event);
+  let keyCode = event.code;
+  switch(keyCode)
+  {
+    case "ArrowLeft":  // left
+      prevPage(); 
+      break;
+    case "ArrowUp":  // up
+      break;  
+    case "ArrowRight":  // right
+      nextPage();
+      break;
+    case "ArrowDown":
+      break;
+    default:
+      break;
+  }
+}
 function prevPage() {
   if (rendition) {
     rendition.prev();
   }
 }
 function nextPage() {
+  // console.log('right');
   if (rendition) {
     rendition.next();
   }
@@ -218,4 +249,5 @@ function toggleTitleAndMenu() {
       transition: all 0.3s linear;
     }
   }
-}</style>
+}
+</style>
