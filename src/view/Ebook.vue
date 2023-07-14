@@ -1,25 +1,9 @@
 <template>
   <!-- <div>1111</div> -->
   <div class="ebook" tabindex="0" v-on:keydown="handleKeyDown" >
-    <transition name="slide-down">
-      <!-- 标题栏 -->
-      <div class="title-wrapper" v-show="titleAndMenuShow">
-        <div class="left">
-          <span class="icon-back icon"></span>
-        </div>
-        <div class="right">
-          <div class="icon-wrapper">
-            <span class="icon-cart icon"></span>
-          </div>
-          <div class="icon-wrapper">
-            <span class="icon-person icon"></span>
-          </div>
-          <div class="icon-wrapper">
-            <span class="icon-more icon"></span>
-          </div>
-        </div>
-      </div>
-    </transition>
+    <!-- 标题栏 -->
+    <TitleBar :titleAndMenuShow="titleAndMenuShow"></TitleBar>
+    
     <!-- 文本 -->
     <div class="read-wrapper">
       <div id="read">
@@ -34,34 +18,32 @@
         </div>
       </div>
     </div>
+    
     <!-- 菜单栏 -->
-
-    <transition name="slide-up">
-      <div class="menu-wrapper" v-show="titleAndMenuShow">
-        <div class="icon-wrapper">
-          <span class="icon-menu icon"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-progress icon"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-bright icon"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-a icon">A</span>
-        </div>
-      </div>
-    </transition>
+    <MenuBar 
+      :fontSizeList="fontSizeList"
+      :titleAndMenuShow="titleAndMenuShow"
+      :defaultFontSize="defaultFontSize"
+      @setFontSize="setFontSize"
+      :themesList="themesList"
+      :curThemeName="curThemeName"
+      @setTheme="setTheme"
+      :bookAvailable="bookAvailable"
+      @onProgressChange="onProgressChange">
+    </MenuBar>
   </div>
 </template>
 
 <script setup lang="ts">
 import Epub from 'epubjs';
+import MenuBar from '../components/MenuBar.vue';
+import TitleBar from '../components/TitleBar.vue';
 // const DOWNLOAD_URL = '../../static/倦怠社会_韩炳哲.epub'
-// const epubName = "[奈须きのこ].空之境界〈上〉（简）";
-const epubName = "我的青春恋爱物语果然有问题01";
+const epubName = "[奈须きのこ].空之境界〈上〉（简）";
+// const epubName = "我的青春恋爱物语果然有问题01";
 const DOWNLOAD_URL = `http://localhost:5173/${epubName}.epub`;
-import { onMounted, ref } from 'vue';
+// const DOWNLOAD_URL = 'E:\\360MoveData\\Users\\DELL\\Desktop\\myEpubReader\\public\\[奈须きのこ].空之境界〈上〉（简）.epub'
+import { onMounted, ref, reactive, } from 'vue';
 
 // document.addEventListener('keydown', )
 
@@ -70,7 +52,62 @@ let book: any = new (Epub as any)(DOWNLOAD_URL);
 let rendition = book.renderTo('read', {
   width: window.innerWidth,
   height: window.innerHeight,
+  allowScriptedContent: true
 })
+let themes = rendition.themes;
+let defaultFontSize = ref<Number>(16);
+let bookAvailable = ref<boolean>(false)
+
+
+let fontSizeList = reactive([
+  {fontSize:12},
+  {fontSize:14},
+  {fontSize:16},
+  {fontSize:18},
+  {fontSize:20},
+  {fontSize:22},
+  {fontSize:24}
+]);
+let themesList = [
+  {
+    name: 'default',
+    style: {
+      body:{
+        'color': '#000',
+        'background': '#fff',
+      }
+    }
+  },
+  {
+    name: 'eye',
+    style: {
+      body:{
+        'color': '#000',
+        'background': '#ceeaba',
+      }
+    }
+  },
+  {
+    name: 'night',
+    style: {
+      body:{
+        'color': '#9e9e9e',
+        'background': '#121212',
+      }
+    }
+  },
+  {
+    name: 'gold',
+    style: {
+      body:{
+        'color': '#000',
+        'background': 'rgb(241, 236, 226)',
+      }
+    }
+  },
+];
+let curThemeName = ref<string>('eye');
+let location:any;
 
 onMounted(() => {
   // 生成Book对象
@@ -78,8 +115,23 @@ onMounted(() => {
   // Redition
   // display 直接操作dom的形式挂上电子书
   rendition.display();
-  console.log(book);
-  console.log(rendition);
+  // 初始化字体大小
+  setFontSize(defaultFontSize.value);
+  // themes.register(name, styles);
+  // themes.select(name);
+  // 注册主题
+  registerThemes();
+  setTheme(curThemeName.value);
+  // 获取locations对象,locations包含着页面信息
+  // 通过epubjs的钩子函数实现
+  book.ready.then(()=>{
+    return book.locations.generate();
+  }).then(() =>{
+    location = book.locations;
+    bookAvailable.value = true;
+    // console.log(location)
+    // onProgressChange(50);
+  })
 })
 
 function handleKeyDown(event:KeyboardEvent)
@@ -89,11 +141,13 @@ function handleKeyDown(event:KeyboardEvent)
   switch(keyCode)
   {
     case "ArrowLeft":  // left
+      titleAndMenuShow.value = false;
       prevPage(); 
       break;
     case "ArrowUp":  // up
       break;  
     case "ArrowRight":  // right
+      titleAndMenuShow.value = false;
       nextPage();
       break;
     case "ArrowDown":
@@ -115,11 +169,32 @@ function nextPage() {
 }
 function toggleTitleAndMenu() {
   titleAndMenuShow.value = !titleAndMenuShow.value;
+  // console.log(menuBar.value);
+  // if(!titleAndMenuShow.value)menuBar.value.hideSetting();
 }
-
+function setFontSize(x:Number){
+  defaultFontSize.value = x;
+  console.log(x);
+  if(themes){themes.fontSize(x+'px');}
+  else {throw Error('themes do not exit;');}
+}
+function registerThemes(){
+   themesList.forEach(themesItem => {
+    themes.register(themesItem.name, themesItem.style);
+   });
+}
+function setTheme(themeName:string){
+  curThemeName.value = themeName;
+  themes.select(themeName);
+}
+function onProgressChange(progress:number){
+  const percentage = progress/100;
+  const pageNo = percentage > 0 ? (location).cfiFromPercentage(percentage) : 0;
+  rendition.display(pageNo);
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../assets/styles/global.scss';
 
 .ebook {
@@ -127,55 +202,6 @@ function toggleTitleAndMenu() {
   height: 100%;
   width: 100%;
 
-  .title-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 101;
-    width: 100%;
-    height: px2rem(48);
-    background-color: pink;
-
-    display: flex;
-    // 阴影
-    box-shadow: 0 px2rem(8) px2rem(8) rgba(0, 0, 0, 0.15);
-
-    .left {
-      flex: 0 0 px2rem(60);
-      // sass 语法
-      @include center;
-    }
-
-    .right {
-      flex: 1;
-      display: flex;
-      justify-content: flex-end;
-
-      .icon-wrapper {
-        flex: 0 0 px2rem(40);
-        @include center;
-
-        .icon-cart {
-          font-size: px2rem(22);
-        }
-      }
-    }
-
-    &.slide-down-enter,
-    &.slide-down-leave-to {
-      transform: translate3d(0, -100%, 0)
-    }
-
-    &.slide-down-enter-to,
-    &.slide-down-leave {
-      transform: translate3d(0, 0, 0);
-    }
-
-    &.slide-down-enter-active,
-    &.slide-down-leave-active {
-      transition: all 0.3s linear;
-    }
-  }
 
   .read-wrapper {
     #read {
@@ -208,46 +234,6 @@ function toggleTitleAndMenu() {
     }
   }
 
-  .menu-wrapper {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 101;
-    width: 100%;
-    height: px2rem(48);
-    background-color: pink;
 
-    display: flex;
-    // 阴影
-    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, 0.15);
-
-    .icon-wrapper {
-      flex: 1;
-      @include center;
-
-      .icon-progress {
-        font-size: px2rem(27);
-      }
-
-      .icon-bright {
-        font-size: px2rem(24);
-      }
-    }
-
-    &.slide-up-enter,
-    &.slide-up-leave-to {
-      transform: translate3d(0, 100%, 0)
-    }
-
-    &.slide-up-enter-to,
-    &.slide-up-leave {
-      transform: translate3d(0, 0, 0);
-    }
-
-    &.slide-up-enter-active,
-    &.slide-up-leave-active {
-      transition: all 0.3s linear;
-    }
-  }
 }
 </style>
